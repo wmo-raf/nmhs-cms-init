@@ -1,0 +1,23 @@
+.privacy-page .privacy-intro {
+    padding: 70px 0 20px;
+}
+
+.privacy-page .section-title {
+    padding: 0 0 20px 0;
+    font-weight: 600;
+}
+
+.privacy-page .content-body {
+    padding: 40px 0;
+}
+
+.privacy-page .format-text h2 {
+    font-size: 28px;
+    padding-bottom: 14px;
+}
+
+@media screen and (max-width: 1024px) {
+    .privacy-page .format-text h2 {
+        font-size: 20px;
+    }
+}

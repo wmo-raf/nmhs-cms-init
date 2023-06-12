@@ -1,0 +1,109 @@
+.project-goals .accordion__item.js-accordion-item {
+    background-color: white;
+    margin: 20px 0;
+}
+
+.project-goals .accordion__item.js-accordion-item.active {
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+}
+
+
+.project-goals .accordion-header.js-accordion-header {
+    display: flex;
+    background: white;
+    width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 16px;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: normal;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+}
+
+.project-goals .accordion-header.js-accordion-header:hover {
+    color: #1a1a1a;
+
+}
+
+.project-goals .accordion__item.js-accordion-item.active .accordion-header.js-accordion-header {
+    display: block;
+    background: #004a54;
+    width: 100%;
+    color: white;
+}
+
+.project-goals .accordion__item.active i.fa-sort-down {
+    transform: rotate(180deg);
+    transition: transform 0.5s ease-in-out;
+}
+
+.accordion__item:not(.active) i.fa-sort-down {
+    transform: rotate(0deg);
+    transition: transform 0.5s ease-in-out;
+}
+
+
+.project-goals .accordion-body.js-accordion-body {
+    padding: 20px 30px;
+    color: #4a4a4a;
+}
+
+.project-goals .accordion-body.js-accordion-body .rich-text ul,
+.project-goals .accordion-body.js-accordion-body .rich-text ol {
+    padding-left: 40px;
+}
+
+.project-goals .accordion-body.js-accordion-body p,
+.project-goals .accordion-body.js-accordion-body li {
+    font-size: 16px;
+}
+
+
+.project-goals .accordion-body.js-accordion-body .rich-text li {
+    list-style: square;
+}
+
+
+.materials-item-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.materials-item-icon figure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #efefef;
+    border-radius: 50%;
+}
+
+.materials-item-icon .document-icon {
+    font-size: 40px;
+    color: #929090;
+}
+
+
+.materials-item-detail {
+    padding: 20px
+}
+
+.materials-item-header {
+    padding-bottom: 10px;
+}
+
+.materials-item-files {
+    display: flex;
+    flex-direction: column;
+}
+
+.materials-item-files > a {
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.video-item .card-tag-float {
+    background-color: #009997;
+}

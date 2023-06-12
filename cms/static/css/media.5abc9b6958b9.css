@@ -1,0 +1,15 @@
+.media-page .video-item .card-tag-float {
+    background-color: rgb(66, 151, 150);
+}
+
+
+.social-media-feed-item {
+    height: 400px;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.social-media-feed-item-title {
+    padding-bottom: 20px;
+}

@@ -1,0 +1,66 @@
+
+.results-view .results-list .result-list-item-tag > span {
+    margin: 0;
+}
+
+.all-projects-section .results-view .results-list.grid-view .result-list-item-tag-float {
+    background-color: #009997;
+    padding: 5px 10px;
+}
+
+.project-timeline {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.project-timeline-bar {
+    height: 10px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #aaa;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.project-timeline-bar-fill {
+    background-color: #009997;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    opacity: 0.6;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+
+.project-timeline-dates {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.project-progress {
+    position: relative;
+    background-color: #e4e4e4;
+    padding: 0 20px;
+    border-radius: 20px;
+}
+
+.project-progress-status {
+    font-size: 11px;
+    position: relative;
+    z-index: 1;
+    color: #262c38;
+}
+
+
+.project-progress-bar {
+    background-color: #009997;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}

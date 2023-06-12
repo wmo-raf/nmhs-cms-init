@@ -1,0 +1,96 @@
+.feedback-columns {
+    width: 100%;
+    margin: 0;
+}
+
+.feedback-detail-title {
+    padding-bottom: 20px;
+
+}
+
+.feedback-detail-subtitle {
+    padding-bottom: 20px;
+}
+
+.feedback-details-container {
+    padding-right: 70px;
+}
+
+
+.feedback-details-container figure {
+    height: 400px;
+    width: 100%;
+}
+
+.feedback-details-container figure img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.feedback-form {
+    padding: 50px;
+    background-color: #f8f9fb;
+
+}
+
+.feedback-form input:focus, .contact-form textarea:focus {
+    border-color: #0b612d;
+    box-shadow: none;
+}
+
+.feedback-form .control .radio {
+    display: block;
+    margin-left: 0;
+    margin-top: .5em;
+}
+
+
+.feedback-form .control.multiple-checkbox ul li {
+    display: block;
+    margin-left: 0;
+    margin-top: .5em;
+}
+
+.feedback-submit-button {
+    background-color: #226296;
+    color: #fff;
+    margin-top: 20px;
+}
+
+.feedback-submit-button:hover {
+    background-color: #cc7c09;
+    color: #fff;
+
+}
+
+
+/*768px and lower*/
+@media screen and (max-width: 768px) {
+
+
+    .feedback-details-container {
+        padding-right: 0.75rem;
+        padding-bottom: 40px;
+
+    }
+
+    .feedback-details-container figure {
+        margin-top: 20px;
+        height: 200px;
+        width: 100%;
+    }
+
+}
+
+.required::after {
+    color: red;
+    content: "*";
+}
+
+
+figure > svg {
+width:100%;
+  min-height:100%;
+  height: auto;
+}

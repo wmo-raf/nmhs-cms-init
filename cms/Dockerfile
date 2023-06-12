@@ -89,22 +89,27 @@ RUN mkdir -p /home/app
 ENV HOME=/home/app
 ENV APP_HOME=/home/app/web
 RUN mkdir $APP_HOME
-ARG CMS_VERSION=0.0.6
 
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.12.0/wait /wait
+RUN chmod +x /wait
 # change to the app user
 # USER app
 
-WORKDIR $APP_HOME
 RUN apt-get update \
     && apt-get install -y unzip
+
+
+ARG CMS_VERSION=0.1.5
 ADD https://github.com/wmo-raf/nmhs-cms/archive/refs/tags/v$CMS_VERSION.zip nmhs_cms.zip
 RUN unzip nmhs_cms.zip -d $APP_HOME && rm nmhs_cms.zip
 RUN chmod +x $APP_HOME/nmhs-cms-$CMS_VERSION
 
-RUN pip install --upgrade pip && pip install -r $APP_HOME/nmhs-cms-$CMS_VERSION/requirements.txt
-COPY entrypoint.sh .
+RUN mv $APP_HOME/nmhs-cms-$CMS_VERSION $APP_HOME/nmhs-cms
+RUN pip install --upgrade pip && pip install -r $APP_HOME/nmhs-cms/requirements.txt
+COPY entrypoint.sh $APP_HOME/nmhs-cms
+WORKDIR $APP_HOME/nmhs-cms
 
 # Port used by this container to serve HTTP.
 EXPOSE 8000
 # switch back to non-root user to run Gunicorn
-ENTRYPOINT ["/home/app/web/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,0 +1,68 @@
+
+.introduction-section {
+    background-color: #fff;
+}
+
+
+.about-us-cta-section .section-title {
+    padding-bottom: 20px;
+}
+
+.about-us-cta-section .more-container {
+    padding-top: 20px;
+}
+
+
+.materials-item-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.materials-item-icon figure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #efefef;
+    border-radius: 50%;
+}
+
+.materials-item-icon .document-icon {
+    font-size: 40px;
+    color: #929090;
+}
+
+
+.materials-item-detail {
+    padding: 20px
+}
+
+.materials-item-header {
+    padding-bottom: 10px;
+}
+
+.materials-item-files {
+    display: flex;
+    flex-direction: column;
+}
+
+.materials-item-files > a {
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+/* .is-index section:nth-child(odd ) {
+    background-color: unset !important;
+} */
+.timeline-section {
+    background-color: rgb(15, 55, 76) !important;
+}
+
+.timeline-section-heading {
+    color: #fff;
+}
+
+.timeline-header .tag {
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+}

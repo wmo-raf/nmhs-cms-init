@@ -1,0 +1,95 @@
+.vacancies .hero .sign-up {
+    background-color: #226296;
+    border: 0px
+}
+
+
+.vacancy-item-wrapper {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+    border-radius: 20px;
+}
+
+.vacancy-item-header {
+    display: flex;
+}
+
+.vacancy-item-header > * {
+    margin-right: 20px;
+}
+
+
+.vacancy-item-highlight {
+    color: #fff;
+    background-color: #006799;
+}
+
+
+.vacancy-item-detail {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.vacancy-item-snippet {
+    padding-bottom: 20px;
+}
+
+.vacancy-item-snippet .rich-text * {
+    font-size: 16px !important;
+    font-weight: normal !important;
+    list-style: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-decoration: none;
+    font-style: normal !important;
+}
+
+.vacancy-item-rem-days {
+    padding-bottom: 20px;
+    color: #006799;
+}
+
+.vacancy-item-deadline {
+    color: #006799;
+    padding-bottom: 20px;
+}
+
+.vacancy-item-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.vacancy-item-station {
+    display: flex;
+    align-items: center;
+}
+
+.vacancy-item-station > * {
+    margin-right: 10px;
+}
+
+.vacancy-item-view-more {
+
+}
+
+
+/*768px and lower*/
+@media screen and (max-width: 768px) {
+
+    .vacancy-item-header {
+        flex-direction: column;
+    }
+
+    .vacancy-item-header .vacancy-item-highlight {
+        margin-bottom: 20px;
+        max-width: 100px;
+    }
+}

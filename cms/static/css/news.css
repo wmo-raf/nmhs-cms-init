@@ -1,0 +1,12 @@
+a.result-list-item-more {
+    color: orange;
+}
+
+
+a.result-list-item-more:hover {
+    color: var(--primary-color);
+}
+
+a.result-list-item-title:hover {
+    opacity: 0.8;
+}

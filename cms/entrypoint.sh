@@ -1,17 +1,10 @@
 #!/bin/bash
-set -e
 
-# Wait for Postgres to start up
-until pg_isready -h $DB_HOST_CMS -p $DB_PORT_CMS -U $DB_USER_CMS
-do
-  echo "PORT $DB_HOST_CMS"
-
-  echo "Waiting for database to start up..."
-  sleep 1
-done
-
+echo "Waiting for database to start up..."
 # Start Gunicorn server
-gunicorn nmhs_cms.wsgi:application --bind 0.0.0.0:8000 
+python manage.py makemigrations
+
+python manage.py migrate --noinput
 # &
 
 # # Execute Django management command as a cron job

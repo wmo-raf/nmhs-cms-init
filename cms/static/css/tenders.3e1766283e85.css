@@ -1,0 +1,106 @@
+.tenders .hero .sign-up {
+    background-color: #226296;
+    border: 0;
+}
+
+
+.tender-item-wrapper {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1);
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.tender-item-header {
+    display: flex;
+}
+
+.tender-item-header > * {
+    margin-right: 20px;
+}
+
+.tender-item-highlight {
+    color: #fff;
+    background-color: #006799;
+}
+
+.tender-item-title {
+    /*color: #006799;*/
+}
+
+.tender-item-title a {
+    /*color: #006799;*/
+}
+
+
+.tender-item-detail {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.tender-item-snippet {
+    padding-bottom: 20px;
+}
+
+.tender-item-snippet .rich-text * {
+    font-size: 16px !important;
+    font-weight: normal !important;
+    list-style: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-decoration: none;
+    font-style: normal !important;
+}
+
+
+.tender-item-rem-days {
+    padding-bottom: 20px;
+    color: #006799;
+}
+
+
+.tender-item-deadline {
+    color: #006799;
+}
+
+.tender-item-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.tender-item-station {
+    display: flex;
+    align-items: center;
+}
+
+.tender-item-station > * {
+    margin-right: 10px;
+}
+
+
+.tender-item-view-more a {
+    width: 100%;
+
+
+}
+
+
+/*768px and lower*/
+@media screen and (max-width: 768px) {
+
+    .tender-item-header {
+        flex-direction: column;
+    }
+
+    .tender-item-header .tender-item-highlight {
+        margin-bottom: 20px;
+        max-width: 100px;
+    }
+}
