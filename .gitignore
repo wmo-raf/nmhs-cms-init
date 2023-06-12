@@ -1,3 +1,5 @@
 media/images/
 media/raster_files/
 media/raster_uploads/
+
+.env
