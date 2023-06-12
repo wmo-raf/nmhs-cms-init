@@ -4,10 +4,10 @@ services:
   cms_web:
     container_name: cms_web
     build: 
-        context: .
+        context: cms
         dockerfile: Dockerfile
-    restart: on-failure
-    command: sh ./entrypoint.sh
+    restart: always
+    command: sh -c "/wait && gunicorn nmhs_cms.wsgi:application --bind 0.0.0.0:8000" 
     expose:
       - 8000
     environment: 
@@ -23,17 +23,22 @@ services:
       - DATABASE=${DATABASE}
       - BASE_PATH=${BASE_PATH}
       - CMS_HOST=${CMS_HOST}
+      - WAIT_HOSTS=cms_db:5432
+      - WAIT_TIMEOUT=120
+      - NEXTJS_SERVER_URL=${NEXTJS_SERVER_URL}
+
     depends_on:
       - cms_db
     ports:
-      - 8000:8000
+      - 8000
     volumes:
-      - ./entrypoint.sh:/entrypoint.sh
-      - static_volume:/home/app/web/static
-      - ./media:/home/app/web/media
-      - ./error.log:/home/app/web/error.log
-      - ./cache:/home/app/web/cache
-      - ./dumpdata.json:/home/app/web/dumpdata.json
+      # - ./entrypoint.sh:/entrypoint.sh
+      - ./cms/static:/home/app/web/nmhs-cms/static
+      - ./cms/media:/home/app/web/nmhs-cms/media
+      - ./cms/error.log:/home/app/web/nmhs-cms/error.log
+      - ./cms/cache:/home/app/web/nmhs-cms/cache
+      - ./cms/dumpdata.json:/home/app/web/nmhs-cms/dumpdata.json
+     
      
   cms_db:
     container_name: cms_db
@@ -48,13 +53,34 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  cms_mapviewer:
+    container_name: cms_mapviewer
+    platform: linux/x86_64
+    build:
+      context: mapviewer
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=${NODE_ENV}
+        - ANALYTICS_PROPERTY_ID=${ANALYTICS_PROPERTY_ID}
+        - BITLY_TOKEN=${BITLY_TOKEN}
+        - DEBUG= ${DEBUG}
+        - GOOGLE_CUSTOM_SEARCH_CX=${GOOGLE_CUSTOM_SEARCH_CX}
+        - GOOGLE_SEARCH_API_KEY=${GOOGLE_SEARCH_API_KEY}
+        - CMS_API=${MAPVIEWER_API}
+    ports:
+      - 3000:3000
+    volumes:
+      - mapviewer_data:/home/app/geomapviewer/.next/static
+
+
   cms_nginx:
     container_name: cms_nginx
     image: nginx:1.18.0-alpine
     volumes:
-      - static_volume:/wagtail_static
-      - ./media:/wagtail_media
+      - ./cms/static:/wagtail_static
+      - ./cms/media:/wagtail_media
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - mapviewer_data:/mapviewer_static
       - mautic_data:/var/www/html
 
     ports:
@@ -101,7 +127,7 @@ networks:
 
 volumes:
   postgres_data:
-  static_volume:
+  mapviewer_data:
   mysql_data:
     driver: local
   mautic_data:
