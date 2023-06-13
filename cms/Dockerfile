@@ -99,7 +99,7 @@ RUN apt-get update \
     && apt-get install -y unzip
 
 
-ARG CMS_VERSION=0.1.5
+ARG CMS_VERSION=0.1.7
 ADD https://github.com/wmo-raf/nmhs-cms/archive/refs/tags/v$CMS_VERSION.zip nmhs_cms.zip
 RUN unzip nmhs_cms.zip -d $APP_HOME && rm nmhs_cms.zip
 RUN chmod +x $APP_HOME/nmhs-cms-$CMS_VERSION
