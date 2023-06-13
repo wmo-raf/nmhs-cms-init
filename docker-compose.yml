@@ -26,6 +26,7 @@ services:
       - DJANGO_ADMINS=${DJANGO_ADMINS}
       - DJANGO_MANAGERS=${DJANGO_MANAGERS}
       - DJANGO_APP_DEVELOPERS=${DJANGO_APP_DEVELOPERS}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - WAGTAIL_CACHE_BACKEND=${WAGTAIL_CACHE_BACKEND}
@@ -41,7 +42,7 @@ services:
       - ./cms/media:/home/app/web/nmhs-cms/media
       - ./cms/error.log:/home/app/web/nmhs-cms/error.log
       - ./cms/cache:/home/app/web/nmhs-cms/cache
-      # - ./cms/dumpdata.json:/home/app/web/nmhs-cms/dumpdata.json
+      - ./cms/weather_conditions.json:/home/app/web/nmhs-cms/weather_conditions.json
       - ./cms/countries_extents.geojson:/home/app/web/nmhs-cms/countries_extents.geojson
      
   cms_memcached:

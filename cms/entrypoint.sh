@@ -2,7 +2,6 @@
 
 echo "Waiting for database to start up..."
 # Start Gunicorn server
-python manage.py makemigrations
 
 python manage.py migrate --noinput
 # &

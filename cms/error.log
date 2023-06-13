@@ -1,0 +1,122 @@
+2023-06-13 08:41:32,474 ERROR Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.9/site-packages/django/utils/deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+  File "/usr/local/lib/python3.9/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/usr/local/lib/python3.9/site-packages/django/http/request.py", line 152, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2023-06-13 08:42:44,471 ERROR Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.9/site-packages/django/utils/deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+  File "/usr/local/lib/python3.9/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/usr/local/lib/python3.9/site-packages/django/http/request.py", line 152, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2023-06-13 08:44:16,880 ERROR Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.9/site-packages/django/utils/deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+  File "/usr/local/lib/python3.9/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/usr/local/lib/python3.9/site-packages/django/http/request.py", line 152, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2023-06-13 08:47:03,981 ERROR Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.9/site-packages/django/utils/deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+  File "/usr/local/lib/python3.9/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/usr/local/lib/python3.9/site-packages/django/http/request.py", line 152, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2023-06-13 08:51:38,924 ERROR Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.9/site-packages/django/utils/deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+  File "/usr/local/lib/python3.9/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/usr/local/lib/python3.9/site-packages/django/http/request.py", line 152, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:3031'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2023-06-13 09:21:35,266 ERROR Internal Server Error: /admin/settings/site_settings/organisationsetting/34/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/query.py", line 929, in get_or_create
+    return self.get(**kwargs), False
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/query.py", line 650, in get
+    raise self.model.DoesNotExist(
+site_settings.models.OrganisationSetting.DoesNotExist: OrganisationSetting matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/fields/__init__.py", line 2018, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'Ethiopia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.9/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python3.9/site-packages/django/views/decorators/cache.py", line 62, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "/usr/local/lib/python3.9/site-packages/wagtail/admin/urls/__init__.py", line 175, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "/usr/local/lib/python3.9/site-packages/wagtail/admin/auth.py", line 184, in decorated_view
+    response = view_func(request, *args, **kwargs)
+  File "/usr/local/lib/python3.9/site-packages/wagtail/contrib/settings/views.py", line 101, in edit
+    instance = model.for_site(site)
+  File "/usr/local/lib/python3.9/site-packages/wagtail/contrib/settings/models.py", line 144, in for_site
+    instance, created = queryset.get_or_create(site=site)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/query.py", line 936, in get_or_create
+    return self.create(**params), True
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/query.py", line 671, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/base.py", line 812, in save
+    self.save_base(
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/base.py", line 863, in save_base
+    updated = self._save_table(
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/base.py", line 1006, in _save_table
+    results = self._do_insert(
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/base.py", line 1047, in _do_insert
+    return manager._insert(
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/query.py", line 1791, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/sql/compiler.py", line 1659, in execute_sql
+    for sql, params in self.as_sql():
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/sql/compiler.py", line 1583, in as_sql
+    value_rows = [
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/sql/compiler.py", line 1584, in <listcomp>
+    [
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/sql/compiler.py", line 1585, in <listcomp>
+    self.prepare_value(field, self.pre_save_val(field, obj))
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/sql/compiler.py", line 1523, in prepare_value
+    value = field.get_db_prep_save(value, connection=self.connection)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/fields/related.py", line 1144, in get_db_prep_save
+    return self.target_field.get_db_prep_save(value, connection=connection)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/fields/__init__.py", line 925, in get_db_prep_save
+    return self.get_db_prep_value(value, connection=connection, prepared=False)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/fields/__init__.py", line 2703, in get_db_prep_value
+    value = self.get_prep_value(value)
+  File "/usr/local/lib/python3.9/site-packages/django/db/models/fields/__init__.py", line 2020, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Ethiopia'.

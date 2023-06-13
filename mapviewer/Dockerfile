@@ -59,7 +59,6 @@ ARG CMS_API
 ENV CMS_API $CMS_API
 
 
-
 RUN yarn build
 
 # Stage 3: run
