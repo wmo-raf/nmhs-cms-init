@@ -3,5 +3,6 @@ cms/media/raster_files/
 cms/media/raster_uploads/
 cms/static/
 cms/cache/
+cms/error.log
 
 .env
