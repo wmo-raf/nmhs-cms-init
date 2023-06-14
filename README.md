@@ -1,4 +1,4 @@
-# nmhs-cms
+# nmhs-cms-init
 
 Content Management System for NMHSs in Africa
 
