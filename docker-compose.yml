@@ -6,6 +6,8 @@ services:
     build: 
         context: cms
         dockerfile: Dockerfile
+        args:
+          - CMS_VERSION=${CMS_VERSION}
     restart: always
     command: sh -c "/wait && gunicorn nmhs_cms.wsgi:application --bind 0.0.0.0:8000" 
     expose:
@@ -15,7 +17,7 @@ services:
       - RECAPTCHA_PUBLIC_KEY=${RECAPTCHA_PUBLIC_KEY}
       - RECAPTCHA_PRIVATE_KEY=${RECAPTCHA_PRIVATE_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
-      - BASE_PATH=${BASE_PATH}
+      - FORCE_SCRIPT_NAME=${ROOT_URL}
       - WAIT_HOSTS=cms_db:5432
       - WAIT_TIMEOUT=120
       - NEXTJS_SERVER_URL=${NEXTJS_SERVER_URL}
@@ -87,6 +89,7 @@ services:
       - 3000:3000
     volumes:
       - mapviewer_data:/home/app/geomapviewer/.next/static
+      
 
   cms_nginx:
     container_name: cms_nginx

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "Waiting for database to start up..."
-# Start Gunicorn server
-
 python manage.py migrate --noinput
 # &
 

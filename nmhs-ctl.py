@@ -35,27 +35,18 @@ commands = [
     'setup_db',
     'setup_mautic',
     'setup_recaptcha',
-    'quickstart',
-    'build',
+    'launch',
     'config',
     'down',
     'execute',
     'logs',
     'login',
     'prune',
-    'restart',
-    'start',
     'status',
     'stop',
-    'up',
-    'update',
 
     # python manage.py commands 
-    'dumpdata',
-    'loaddata',
     'forecast',
-    'migrate',
-    'collectstatic',
     'createsuperuser'
 ]
 
@@ -64,20 +55,13 @@ parser.add_argument('command',
                     help="""
     - setup_XX: setup environment variables
     - config: validate and view Docker configuration
-    - quickstart: run a quick instance with default params
-    - build [containers]: build all services
-    - start [containers]: start system
+    - launch: run a quick instance with default params
     - login [container]: login to the container (default: cms_web)
     - login-root [container]: login to the container as root
     - stop: stop [container] system
     - update: update Docker images
     - prune: cleanup dangling containers and images
-    - restart [containers]: restart one or all containers
     - status [containers|-a]: view status of containers
-    - dumpdata: creates a dump_data.json of the database in cms_web container
-    - loaddata: loads dump_data.json into database in cms_web container
-    - migrate: migrates columns and tables of database in cms_web container
-    - collectstatic: collects static files into a single location that can easily be served in production in cms_web container
     - forecast: ingests next 7-day forecast in cms_web container from yr.no weather forecast API
     - createsuperuser: create admin superuser
     """)
@@ -195,6 +179,24 @@ def split(value: str) -> list:
     """
     return value.split()
 
+def setup_docker_args():
+    user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
+
+    while user_mautic_input != 'y' or user_mautic_input != 'Y' or user_mautic_input != 'N' or user_mautic_input != 'n':
+
+        if user_mautic_input == 'y' or user_mautic_input ==  'Y'  or user_mautic_input == 'N' or user_mautic_input ==  'n':
+            exec_mautic = True if 'y' or 'Y' else False
+            break
+
+        print(f"{RED}Accepts only 'Y' or 'N' {RESET}")
+        user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
+
+
+    docker_compose_args = DOCKER_COMPOSE_ARGS + '--file docker-compose.mautic.yml' if exec_mautic else'--file docker-compose.yml'
+
+    return docker_compose_args
+    
+
 def run(args, cmd, asciiPipe=False) -> str:
 
     if args.simulate:
@@ -212,26 +214,13 @@ def run(args, cmd, asciiPipe=False) -> str:
     return None
 
 
+
 def make(args) -> None:
     """
     Serves as pseudo Makefile using Python subprocesses.
     :param command: required, string. Make command.
     :returns: None.
     """
-    user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
-
-    while user_mautic_input != 'y' or user_mautic_input != 'Y' or user_mautic_input != 'N' or user_mautic_input != 'n':
-
-        if user_mautic_input == 'y' or user_mautic_input ==  'Y'  or user_mautic_input == 'N' or user_mautic_input ==  'n':
-            exec_mautic = True if 'y' or 'Y' else False
-            break
-
-        print(f"{RED}Accepts only 'Y' or 'N' {RESET}")
-        user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
-
-
-    docker_compose_args = DOCKER_COMPOSE_ARGS + '--file docker-compose.mautic.yml' if exec_mautic else'--file docker-compose.yml'
-
     # if you selected a bunch of them, default to all
     containers = "" if not args.args else ' '.join(args.args)
 
@@ -239,48 +228,33 @@ def make(args) -> None:
     container = "cms_web" if not args.args else ' '.join(args.args)
 
     if args.command == "config":
+        docker_compose_args = setup_docker_args()
+
         run(args, split(f'docker-compose {docker_compose_args} config'))
-    elif args.command == "build":
-        run(args, split(
-            f'docker-compose {docker_compose_args} build {containers}'))
-    elif args.command in ["up", "start"]:
-        print(f"{GREEN}STARTING SERVICES{RESET}")
-
-        if containers:
-            run(args, split(f"docker-compose {docker_compose_args} start {containers}"))
-        else:
-            print(f"{YELLOW}=> [1/3] STARTING CONTAINERS AGAIN {RESET}")
-            run(args, split(f'docker-compose {docker_compose_args} up -d'))
-
-            print(f"{YELLOW}=> [2/3] MIGRATING DATABASE TABLES {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} exec -T cms_web python manage.py makemigrations'))
-            run(args, split(
-                f'docker-compose {docker_compose_args} exec -T cms_web python manage.py migrate'))
-            
-            print(f"{YELLOW}=> [3/53 COLLECTING STATIC FILES {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} exec -T cms_web python manage.py collectstatic --clear --no-input'))
-            
-        print(f"{GREEN}\u2713 OPERATION HAS BEEN COMPLETED {RESET}")
 
     elif args.command == "execute":
         run(args, ['docker', 'exec', '-i', 'cms_web', 'sh', '-c', containers])
+
     elif args.command == "login":
         run(args, split(f'docker exec -it {container} /bin/bash'))
+
     elif args.command == "login-root":
         run(args, split(f'docker exec -u -0 -it {container} /bin/bash'))
+
     elif args.command == "logs":
+        docker_compose_args = setup_docker_args()
+
         run(args, split(
             f'docker-compose {docker_compose_args} logs --follow {containers}'))
+        
     elif args.command in ["stop", "down"]:
+        docker_compose_args = setup_docker_args()
+
         if containers:
             run(args, split(f"docker-compose {docker_compose_args} {containers}"))
         else:
             run(args, split(
                 f'docker-compose {docker_compose_args} down --remove-orphans {containers}')) 
-    elif args.command == "update":
-        run(args, split(f'docker-compose {docker_compose_args} pull'))
     elif args.command == "prune":
         run(args, split('docker builder prune -f'))
         run(args, split('docker container prune -f'))
@@ -291,94 +265,50 @@ def make(args) -> None:
         run(args, split(f'docker rmi {_}'))
         _ = run(args, split('docker ps -a -q'), asciiPipe=True)
         run(args, split(f'docker rm {_}'))
-    elif args.command == "restart":
-        print(f"{GREEN}RESTARTING ALL SERVICES{RESET}")
-        
-        if containers:
-            print(f"{YELLOW}=> [1/2] STOPPING CONTAINERS {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} stop {containers}'))
-        
-            print(f"{YELLOW}=> [2/2] STARTING CONTAINERS AGAIN {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} start {containers}'))
-        else:
-            print(f"{YELLOW}=> [1/5] STOPPING AND REMOVING CONTAINERS, IMAGES & NETWORKS {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} down --remove-orphans'))
-            
-            print(f"{YELLOW}=> [2/5] BUILDING IMAGES {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} build'))
-            
-            print(f"{YELLOW}=> [3/5] STARTING CONTAINERS AGAIN {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} up -d --force-recreate'))
-            
-            print(f"{YELLOW}=> [4/5] MIGRATING DATABASE TABLES {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} exec -T cms_web python manage.py makemigrations'))
-            run(args, split(
-                f'docker-compose {docker_compose_args} exec -T cms_web python manage.py migrate --fake'))
-            
-            print(f"{YELLOW}=> [5/5] COLLECTING STATIC FILES {RESET}")
-            run(args, split(
-                f'docker-compose {docker_compose_args} exec -T cms_web python manage.py collectstatic --clear --no-input'))
-            
-        print(f"{GREEN}\u2713 OPERATION HAS BEEN COMPLETED {RESET}")
-
+    
     elif args.command == "status":
+        docker_compose_args = setup_docker_args()
         run(args, split(
             f'docker-compose {docker_compose_args} ps {containers}'))
         
+    elif args.command == "launch":
+        docker_compose_args = setup_docker_args()
 
-    elif args.command == "quickstart":
         print(f"{GREEN}RUNNING QUICKSTART INSTANCE {RESET}")
-        print(f"{YELLOW}=> [1/6] BUILDING CONTAINERS {RESET}")
+        print(f"{YELLOW}=> [1/5] BUILDING CONTAINERS {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} build {containers}'))
         
-        print(f"{YELLOW}=> [2/6] STARTING UP CONTAINERS {RESET}")
+        print(f"{YELLOW}=> [2/5] STARTING UP CONTAINERS {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} up -d'))
         
-        print(f"{YELLOW}=> [3/6] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
+        print(f"{YELLOW}=> [3/5] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
         run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py loaddata weather_conditions.json'))
+            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py loaddata weather_conditions.json'))
         
-        print(f"{YELLOW}=> [4/6] LOADING INITIAL COUNTRIES DATA {RESET}")
+        print(f"{YELLOW}=> [4/5] LOADING INITIAL COUNTRIES DATA {RESET}")
         run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py load_countries'))
+            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py load_countries'))
         
-        print(f"{YELLOW}=> [5/6] COLLECTING STATIC FILES {RESET}")
+        print(f"{YELLOW}=> [5/5] COLLECTING STATIC FILES {RESET}")
         run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py collectstatic --clear --no-input'))
+            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py collectstatic --clear --no-input'))
         
-          
         print(f"{GREEN}\u2713 OPERATION HAS BEEN COMPLETED {RESET}")
 
-    elif args.command == "dumpdata":
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py dumpdata --natural-foreign --natural-primary --indent 2'   
-            ' --exclude wagtailcore.ReferenceIndex -e wagtailsearch.indexentry -e wagtailimages.rendition -e sessions > dumpdata.json'))
-    
-    elif args.command == "loaddata":
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py loaddata dumpdata.json'))
     elif args.command == "forecast":
+        docker_compose_args = setup_docker_args()
+
         run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py generate_forecast'))
+            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py generate_forecast'))
+    
     elif args.command == "createsuperuser":
+        docker_compose_args = setup_docker_args()
+
         run(args, split(
             f'docker-compose {docker_compose_args} exec cms_web python manage.py createsuperuser'))
-    elif args.command == "migrate":
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py makemigrations'))
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py migrate'))
-    elif args.command == "collectstatic":
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py collectstatic --clear --no-input'))
+        
     elif args.command == "setup_db":
         print(f"{MAGENTA}Setting up PostgreSQL Configs...{RESET}")
         setup_config([
@@ -387,7 +317,6 @@ def make(args) -> None:
         ])
         print(f"{MAGENTA}\u2713 Completed PostgreSQL Setup... Run {CYAN}'python3 nmhs-ctl.py restart' to reload changes{RESET}")
 
-
     elif args.command == "setup_mautic":
         print("Setting up Mautic Configs...")
         setup_config([
@@ -395,7 +324,7 @@ def make(args) -> None:
             'MAUTIC_DB_PASSWORD',
             'MYSQL_ROOT_PASSWORD'
         ])
-        print(f"{MAGENTA}\u2713 Completed Mautic Setup... Run {CYAN}'python3 nmhs-ctl.py restart' to reload changes{RESET}")
+        print(f"{MAGENTA}\u2713 Completed Mautic Setup... Run {CYAN}'python3 nmhs-ctl.py launch' to reload changes{RESET}")
 
     
     elif args.command == "setup_recaptcha":
@@ -404,35 +333,34 @@ def make(args) -> None:
             'RECAPTCHA_PRIVATE_KEY',
             'RECAPTCHA_PUBLIC_KEY',
         ])
-        print(f"{MAGENTA}\u2713 Completed Recaptcha Setup... Run {CYAN}'python3 nmhs-ctl.py restart' to reload changes{RESET}")
+        print(f"{MAGENTA}\u2713 Completed Recaptcha Setup... Run {CYAN}'python3 nmhs-ctl.py launch' to reload changes{RESET}")
 
 
     elif args.command == "setup_cms":
         print(f"{MAGENTA}Setting up CMS Configs...{RESET}")
         setup_config([
             'ENVIRONMENT',
-            'DEBUG',
-            'CMS_HOST',
+            'DJANGO_DEBUG',
             'CMS_PORT',
             'BASE_PATH',
         ])
 
-        print(f"{MAGENTA}\u2713 Completed CMS Setup... Run {CYAN}'python3 nmhs-ctl.py restart'{MAGENTA} to reload changes{RESET}")
+        print(f"{MAGENTA}\u2713 Completed CMS Setup... Run {CYAN}'python3 nmhs-ctl.py launch'{MAGENTA} to reload changes{RESET}")
 
 if __name__ == "__main__":
 
     # create production ready files from sample files 
-    config_files ={
-        'env':['.env', '.env.sample'],
-        'nginx':['nginx/nginx.conf','nginx/nginx.sample.conf' ]
-    }
+    # config_files ={
+    #     'env':['.env', '.env.sample'],
+    #     'nginx':['nginx/nginx.conf','nginx/nginx.sample.conf' ]
+    # }
 
-    for config in config_files:
-        sample_file = config_files[config][1]
-        prod_file = config_files[config][0]
+    # for config in config_files:
+    #     sample_file = config_files[config][1]
+    #     prod_file = config_files[config][0]
 
-        if not os.path.exists(prod_file):
-            shutil.copy(sample_file, prod_file)
-            print(f"{prod_file} file created from {sample_file}.")
+    #     if not os.path.exists(prod_file):
+    #         shutil.copy(sample_file, prod_file)
+    #         print(f"{prod_file} file created from {sample_file}.")
             
     make(args)
