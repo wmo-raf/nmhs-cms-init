@@ -220,9 +220,17 @@ def make(args) -> None:
     """
     user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
 
-    docker_compose_args = DOCKER_COMPOSE_ARGS + '--file docker-compose.mautic.yml' if exec_mautic else'--file docker-compose.yml'
+    while user_mautic_input != 'y' or user_mautic_input != 'Y' or user_mautic_input != 'N' or user_mautic_input != 'n':
 
-    
+        if user_mautic_input == 'y' or user_mautic_input ==  'Y'  or user_mautic_input == 'N' or user_mautic_input ==  'n':
+            exec_mautic = True if 'y' or 'Y' else False
+            break
+
+        print(f"{RED}Accepts only 'Y' or 'N' {RESET}")
+        user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
+
+
+    docker_compose_args = DOCKER_COMPOSE_ARGS + '--file docker-compose.mautic.yml' if exec_mautic else'--file docker-compose.yml'
 
     # if you selected a bunch of them, default to all
     containers = "" if not args.args else ' '.join(args.args)
@@ -334,24 +342,19 @@ def make(args) -> None:
         run(args, split(
             f'docker-compose {docker_compose_args} up -d'))
         
-        print(f"{YELLOW}=> [3/6] MIGRATING DATABASE TABLES {RESET}")
+        print(f"{YELLOW}=> [3/6] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
         run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py makemigrations'))
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py migrate'))
+            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py loaddata weather_conditions.json'))
         
-        print(f"{YELLOW}=> [4/6] LOADING DUMP DATA {RESET}")
+        print(f"{YELLOW}=> [4/6] LOADING INITIAL COUNTRIES DATA {RESET}")
         run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py loaddata dumpdata.json'))
+            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py load_countries'))
         
         print(f"{YELLOW}=> [5/6] COLLECTING STATIC FILES {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} exec -T cms_web python manage.py collectstatic --clear --no-input'))
         
-        print(f"{YELLOW}=> [6/6] FETCHING 7-DAY FORECAST {RESET}")
-        run(args, split(
-            f'docker-compose {docker_compose_args} exec -T cms_web python manage.py generate_forecast'))
-        
+          
         print(f"{GREEN}\u2713 OPERATION HAS BEEN COMPLETED {RESET}")
 
     elif args.command == "dumpdata":

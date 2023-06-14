@@ -11,21 +11,27 @@ services:
     expose:
       - 8000
     environment: 
-      - DEBUG=${DEBUG}
-      - DB_PORT_CMS=${POSTGRES_PORT_CMS}
-      - DB_NAME_CMS=${POSTGRES_DB_CMS}
-      - DB_PASSWORD_CMS=${POSTGRES_PASSWORD_CMS}
-      - DB_USER_CMS=${POSTGRES_USER_CMS}
-      - DB_HOST_CMS=cms_db
+      - DEBUG=${DJANGO_DEBUG}
       - RECAPTCHA_PUBLIC_KEY=${RECAPTCHA_PUBLIC_KEY}
       - RECAPTCHA_PRIVATE_KEY=${RECAPTCHA_PRIVATE_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
       - BASE_PATH=${BASE_PATH}
-      - CMS_HOST=${CMS_HOST}
       - WAIT_HOSTS=cms_db:5432
       - WAIT_TIMEOUT=120
       - NEXTJS_SERVER_URL=${NEXTJS_SERVER_URL}
-
+      - DATABASE_URL=postgis://${POSTGRES_USER_CMS}:${POSTGRES_PASSWORD_CMS}@cms_db:${POSTGRES_PORT_CMS}/${POSTGRES_DB_CMS}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - DJANGO_ADMINS=${DJANGO_ADMINS}
+      - DJANGO_MANAGERS=${DJANGO_MANAGERS}
+      - DJANGO_APP_DEVELOPERS=${DJANGO_APP_DEVELOPERS}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - WAGTAIL_CACHE_BACKEND=${WAGTAIL_CACHE_BACKEND}
+      - MEMCACHED_URI=${MEMCACHED_URI}
+      
     depends_on:
       - cms_db
     ports:
@@ -36,9 +42,20 @@ services:
       - ./cms/media:/home/app/web/nmhs-cms/media
       - ./cms/error.log:/home/app/web/nmhs-cms/error.log
       - ./cms/cache:/home/app/web/nmhs-cms/cache
-      - ./cms/dumpdata.json:/home/app/web/nmhs-cms/dumpdata.json
+      - ./cms/weather_conditions.json:/home/app/web/nmhs-cms/weather_conditions.json
+      - ./cms/countries_extents.geojson:/home/app/web/nmhs-cms/countries_extents.geojson
      
-     
+  cms_memcached:
+    image: memcached:1.6.12-alpine
+    container_name: cms_memcached
+    restart: ${RESTART_POLICY}
+    ports:
+      - "11211"
+    entrypoint:
+      - memcached
+      - -m 2048
+      - -I 10m
+
   cms_db:
     container_name: cms_db
     image: postgis/postgis:12-master

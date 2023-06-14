@@ -54,6 +54,7 @@ services:
     entrypoint:
       - memcached
       - -m 2048
+      - -I 10m
 
   cms_db:
     container_name: cms_db
