@@ -1,4 +1,4 @@
-# nmhs-cms
+# nmhs-cms-init
 
 Content Management System for NMHSs in Africa
 
@@ -46,11 +46,10 @@ The `quickstart` arguement in `nmhs-ctl.py` deploys nmhs-cms with test data with
     The `quickstart` executes the following steps:
 
     ```py
-    [1/5] BUILDING CONTAINERS
-    [2/5] STARTING UP CONTAINERS 
-    [3/5] LOADING INITIAL WEATHER CONDITIONS DATA
-    [4/5] LOADING INITIAL COUNTRIES DATA 
-    [5/5] COLLECTING STATIC FILES
+    [1/4] BUILDING CONTAINERS
+    [2/4] STARTING UP CONTAINERS 
+    [3/4] LOADING INITIAL WEATHER CONDITIONS DATA
+    [4/4] COLLECTING STATIC FILES
     ```
 
     The instance can be found at `http://localhost:{CMS_PORT}`

@@ -15,10 +15,8 @@ CYAN = '\033[96m'
 RESET = '\033[0m'
 
 DOCKER_COMPOSE_ARGS = """
-    --env-file .env
+        --env-file .env
     """
-
-exec_mautic = False
 
 parser = argparse.ArgumentParser(
     description='manage a composition of docker containers to implement a nmhs cms instance',
@@ -185,14 +183,13 @@ def setup_docker_args():
     while user_mautic_input != 'y' or user_mautic_input != 'Y' or user_mautic_input != 'N' or user_mautic_input != 'n':
 
         if user_mautic_input == 'y' or user_mautic_input ==  'Y'  or user_mautic_input == 'N' or user_mautic_input ==  'n':
-            exec_mautic = True if 'y' or 'Y' else False
+
+            docker_compose_args = DOCKER_COMPOSE_ARGS + '--file docker-compose.mautic.yml' if user_mautic_input == 'y' or user_mautic_input ==  'Y' else DOCKER_COMPOSE_ARGS
             break
 
         print(f"{RED}Accepts only 'Y' or 'N' {RESET}")
         user_mautic_input = input(f"Do you want to run mautic alongside CMS? {CYAN} Y or N? {RESET}")
 
-
-    docker_compose_args = DOCKER_COMPOSE_ARGS + '--file docker-compose.mautic.yml' if exec_mautic else'--file docker-compose.yml'
 
     return docker_compose_args
     
@@ -275,39 +272,39 @@ def make(args) -> None:
         docker_compose_args = setup_docker_args()
 
         print(f"{GREEN}RUNNING QUICKSTART INSTANCE {RESET}")
-        print(f"{YELLOW}=> [1/5] BUILDING CONTAINERS {RESET}")
+        print(f"{YELLOW}=> [1/4] BUILDING CONTAINERS {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} build {containers}'))
         
-        print(f"{YELLOW}=> [2/5] STARTING UP CONTAINERS {RESET}")
+        print(f"{YELLOW}=> [2/4] STARTING UP CONTAINERS {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} up -d'))
         
-        print(f"{YELLOW}=> [3/5] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
+        print(f"{YELLOW}=> [3/4] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} run --rm cms_web python manage.py loaddata weather_conditions.json'))
         
-        print(f"{YELLOW}=> [4/5] LOADING INITIAL COUNTRIES DATA {RESET}")
-        run(args, split(
-            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py load_countries'))
+        # print(f"{YELLOW}=> [4/5] LOADING INITIAL COUNTRIES DATA {RESET}")
+        # run(args, split(
+        #     f'docker-compose {docker_compose_args} run --rm cms_web python manage.py load_countries'))
         
-        print(f"{YELLOW}=> [5/5] COLLECTING STATIC FILES {RESET}")
+        print(f"{YELLOW}=> [4/4] COLLECTING STATIC FILES {RESET}")
         run(args, split(
             f'docker-compose {docker_compose_args} run --rm cms_web python manage.py collectstatic --clear --no-input'))
         
         print(f"{GREEN}\u2713 OPERATION HAS BEEN COMPLETED {RESET}")
 
     elif args.command == "forecast":
-        docker_compose_args = setup_docker_args()
+        # docker_compose_args = setup_docker_args()
 
         run(args, split(
-            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py generate_forecast'))
+            f'docker-compose {DOCKER_COMPOSE_ARGS} run --rm cms_web python manage.py generate_forecast'))
     
     elif args.command == "createsuperuser":
-        docker_compose_args = setup_docker_args()
+        # docker_compose_args = setup_docker_args()
 
         run(args, split(
-            f'docker-compose {docker_compose_args} exec cms_web python manage.py createsuperuser'))
+            f'docker-compose {DOCKER_COMPOSE_ARGS} exec cms_web python manage.py createsuperuser'))
         
     elif args.command == "setup_db":
         print(f"{MAGENTA}Setting up PostgreSQL Configs...{RESET}")

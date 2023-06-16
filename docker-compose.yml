@@ -45,7 +45,6 @@ services:
       - ./cms/error.log:/home/app/web/nmhs-cms/error.log
       - ./cms/cache:/home/app/web/nmhs-cms/cache
       - ./cms/weather_conditions.json:/home/app/web/nmhs-cms/weather_conditions.json
-      - ./cms/countries_extents.geojson:/home/app/web/nmhs-cms/countries_extents.geojson
      
   cms_memcached:
     image: memcached:1.6.12-alpine
@@ -106,10 +105,10 @@ services:
       - cms_web  
 
 
-networks:
-    default:
-      name:  ${AHW_DOCKER_NETWORK}
-      external: true
+# networks:
+#     default:
+#       name:  ${AHW_DOCKER_NETWORK}
+#       external: true
 
 
 volumes:
