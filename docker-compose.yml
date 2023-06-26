@@ -105,5 +105,5 @@ volumes:
 
 networks:
     default:
-      name:  ${AHW_DOCKER_NETWORK}
+      name:  ${DOCKER_NETWORK}
       external: true
