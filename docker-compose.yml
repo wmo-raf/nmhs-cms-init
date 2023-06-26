@@ -1,27 +1,50 @@
 version: '3'
 
 services:
+  cms_db:
+    container_name: cms_db
+    image: postgis/postgis:15-master
+    restart: ${RESTART_POLICY}
+    environment: 
+      - POSTGRES_USER=${POSTGRES_USER_CMS}
+      - POSTGRES_DB=${POSTGRES_DB_CMS}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_CMS}
+    ports: 
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  cms_memcached:
+    image: memcached:1.6.12-alpine
+    container_name: cms_memcached
+    restart: ${RESTART_POLICY}
+    ports:
+      - "11211"
+    entrypoint:
+      - memcached
+      - -m 1024
+      - -I 10m
   cms_web:
     container_name: cms_web
+    platform: linux/x86_64
     build: 
         context: cms
         dockerfile: Dockerfile
         args:
           - CMS_VERSION=${CMS_VERSION}
-    restart: always
+    restart: ${RESTART_POLICY}
     command: sh -c "/wait && gunicorn nmhs_cms.wsgi:application --bind 0.0.0.0:8000" 
     expose:
       - 8000
     environment: 
+      - WAIT_HOSTS=cms_db:5432
+      - WAIT_TIMEOUT=120
       - DEBUG=${DJANGO_DEBUG}
       - RECAPTCHA_PUBLIC_KEY=${RECAPTCHA_PUBLIC_KEY}
       - RECAPTCHA_PRIVATE_KEY=${RECAPTCHA_PRIVATE_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
       - FORCE_SCRIPT_NAME=${ROOT_URL}
-      - WAIT_HOSTS=cms_db:5432
-      - WAIT_TIMEOUT=120
       - NEXTJS_SERVER_URL=${NEXTJS_SERVER_URL}
-      - DATABASE_URL=postgis://${POSTGRES_USER_CMS}:${POSTGRES_PASSWORD_CMS}@cms_db:${POSTGRES_PORT_CMS}/${POSTGRES_DB_CMS}
+      - DATABASE_URL=postgis://${POSTGRES_USER_CMS}:${POSTGRES_PASSWORD_CMS}@cms_db:5432/${POSTGRES_DB_CMS}
       - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
@@ -33,42 +56,15 @@ services:
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - WAGTAIL_CACHE_BACKEND=${WAGTAIL_CACHE_BACKEND}
       - MEMCACHED_URI=${MEMCACHED_URI}
-      
     depends_on:
       - cms_db
     ports:
       - 8000
     volumes:
-      # - ./entrypoint.sh:/entrypoint.sh
-      - ./cms/static:/home/app/web/nmhs-cms/static
-      - ./cms/media:/home/app/web/nmhs-cms/media
-      - ./cms/error.log:/home/app/web/nmhs-cms/error.log
-      - ./cms/cache:/home/app/web/nmhs-cms/cache
-      - ./cms/weather_conditions.json:/home/app/web/nmhs-cms/weather_conditions.json
-     
-  cms_memcached:
-    image: memcached:1.6.12-alpine
-    container_name: cms_memcached
-    restart: ${RESTART_POLICY}
-    ports:
-      - "11211"
-    entrypoint:
-      - memcached
-      - -m 2048
-      - -I 10m
-
-  cms_db:
-    container_name: cms_db
-    image: postgis/postgis:12-master
-    restart: always
-    environment: 
-      - POSTGRES_USER=${POSTGRES_USER_CMS}
-      - POSTGRES_DB=${POSTGRES_DB_CMS}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_CMS}
-    ports: 
-      - ${POSTGRES_PORT_CMS}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - ./cms/static:/home/app/web/static
+      - ./cms/media:/home/app/web/media
+      - ./cms/error.log:/home/app/web/error.log
+      - ./cms/weather_conditions.json:/home/app/web/weather_conditions.json
 
   cms_mapviewer:
     container_name: cms_mapviewer
@@ -76,44 +72,38 @@ services:
     build:
       context: mapviewer
       dockerfile: Dockerfile
-      args:
-        - NODE_ENV=${NODE_ENV}
-        - ANALYTICS_PROPERTY_ID=${ANALYTICS_PROPERTY_ID}
-        - BITLY_TOKEN=${BITLY_TOKEN}
-        - DEBUG= ${DEBUG}
-        - GOOGLE_CUSTOM_SEARCH_CX=${GOOGLE_CUSTOM_SEARCH_CX}
-        - GOOGLE_SEARCH_API_KEY=${GOOGLE_SEARCH_API_KEY}
-        - CMS_API=${MAPVIEWER_API}
-    ports:
-      - 3000:3000
+    environment:
+      - ANALYTICS_PROPERTY_ID=${ANALYTICS_PROPERTY_ID}
+      - BITLY_TOKEN=${BITLY_TOKEN}
+      - DEBUG= ${DEBUG}
+      - GOOGLE_CUSTOM_SEARCH_CX=${GOOGLE_CUSTOM_SEARCH_CX}
+      - GOOGLE_SEARCH_API_KEY=${GOOGLE_SEARCH_API_KEY}
+      - CMS_API=${MAPVIEWER_API}
+      - BASE_PATH=${ROOT_URL}
+      - ASSET_PREFIX=${ROOT_URL}
+      - NEXT_TELEMETRY_DISABLED=1
     volumes:
-      - mapviewer_data:/home/app/geomapviewer/.next/static
-      
-
+      - next:/app/.next/
+    ports:
+      - 3000
   cms_nginx:
     container_name: cms_nginx
-    image: nginx:1.18.0-alpine
+    image: nginx:1.20.2-alpine
     volumes:
       - ./cms/static:/wagtail_static
       - ./cms/media:/wagtail_media
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - mapviewer_data:/mapviewer_static
-
+      - next:/next/
     ports:
       - ${CMS_PORT}:80
     depends_on:
       - cms_web  
 
-
-# networks:
-#     default:
-#       name:  ${AHW_DOCKER_NETWORK}
-#       external: true
-
-
 volumes:
   postgres_data:
-  mapviewer_data:
-  mysql_data:
-    driver: local
- 
+  next:
+
+networks:
+    default:
+      name:  ${AHW_DOCKER_NETWORK}
+      external: true
