@@ -12,7 +12,7 @@ services:
     ports: 
       - 5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - ${CMS_DB_VOLUME}:/var/lib/postgresql/data/
   cms_memcached:
     image: memcached:1.6.12-alpine
     container_name: cms_memcached
@@ -64,7 +64,6 @@ services:
       - ./cms/static:/home/app/web/static
       - ./cms/media:/home/app/web/media
       - ./cms/error.log:/home/app/web/error.log
-      - ./cms/weather_conditions.json:/home/app/web/weather_conditions.json
 
   cms_mapviewer:
     container_name: cms_mapviewer
