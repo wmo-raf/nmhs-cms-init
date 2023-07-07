@@ -43,7 +43,6 @@ services:
       - ./cms/static:/home/app/web/nmhs-cms/static
       - ./cms/media:/home/app/web/nmhs-cms/media
       - ./cms/error.log:/home/app/web/nmhs-cms/error.log
-      - ./cms/cache:/home/app/web/nmhs-cms/cache
       - ./cms/weather_conditions.json:/home/app/web/nmhs-cms/weather_conditions.json
      
   cms_memcached:
@@ -84,6 +83,7 @@ services:
         - GOOGLE_CUSTOM_SEARCH_CX=${GOOGLE_CUSTOM_SEARCH_CX}
         - GOOGLE_SEARCH_API_KEY=${GOOGLE_SEARCH_API_KEY}
         - CMS_API=${MAPVIEWER_API}
+        - BASE_PATH=${NEXTJS_BASE_PATH}
     ports:
       - 3000:3000
     volumes:

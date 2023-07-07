@@ -84,6 +84,7 @@ services:
         - GOOGLE_CUSTOM_SEARCH_CX=${GOOGLE_CUSTOM_SEARCH_CX}
         - GOOGLE_SEARCH_API_KEY=${GOOGLE_SEARCH_API_KEY}
         - CMS_API=${MAPVIEWER_API}
+        - BASE_PATH=${ROOT_URL}
     ports:
       - 3000:3000
     volumes:

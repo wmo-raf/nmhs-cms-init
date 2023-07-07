@@ -102,7 +102,7 @@ RUN apt-get update \
 ARG CMS_VERSION
 ENV CMS_VERSION=$CMS_VERSION
 
-ADD "https://github.com/wmo-raf/nmhs-cms/archive/refs/tags/v$CMS_VERSION.zip" nmhs_cms.zip
+ADD "https://github.com/wmo-raf/nmhs-cms/archive/$CMS_VERSION.zip" nmhs_cms.zip
 RUN unzip nmhs_cms.zip -d $APP_HOME && rm nmhs_cms.zip
 RUN chmod +x $APP_HOME/nmhs-cms-$CMS_VERSION
 

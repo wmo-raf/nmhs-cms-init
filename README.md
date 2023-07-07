@@ -29,7 +29,7 @@ The `quickstart` arguement in `nmhs-ctl.py` deploys nmhs-cms with test data with
 
     `git clone https://github.com/wmo-raf/nmhs-cms-init.git`
 
-    `cd nmhs-cms`
+    `cd nmhs-cms-init`
 
 2. Setup environmental variables
 

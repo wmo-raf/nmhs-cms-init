@@ -280,9 +280,9 @@ def make(args) -> None:
         run(args, split(
             f'docker-compose {docker_compose_args} up -d'))
         
-        print(f"{YELLOW}=> [3/4] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
-        run(args, split(
-            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py loaddata weather_conditions.json'))
+        # print(f"{YELLOW}=> [3/4] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
+        # run(args, split(
+        #     f'docker-compose {docker_compose_args} run --rm cms_web python manage.py loaddata weather_conditions.json'))
         
         # print(f"{YELLOW}=> [4/5] LOADING INITIAL COUNTRIES DATA {RESET}")
         # run(args, split(
