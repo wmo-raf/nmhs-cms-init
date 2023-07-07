@@ -46,10 +46,9 @@ The `quickstart` arguement in `nmhs-ctl.py` deploys nmhs-cms with test data with
     The `quickstart` executes the following steps:
 
     ```py
-    [1/4] BUILDING CONTAINERS
-    [2/4] STARTING UP CONTAINERS 
-    [3/4] LOADING INITIAL WEATHER CONDITIONS DATA
-    [4/4] COLLECTING STATIC FILES
+    [1/3] BUILDING CONTAINERS
+    [2/3] STARTING UP CONTAINERS 
+    [3/3] COLLECTING STATIC FILES
     ```
 
     The instance can be found at `http://localhost:{CMS_PORT}`
