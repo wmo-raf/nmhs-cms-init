@@ -1,43 +1,19 @@
-FROM node:16.16.0-bullseye-slim AS deps
+# Stage 1: Build
+FROM node:16.16.0-bullseye-slim AS builder
 
 RUN apt-get update && \
     apt-get install -y \
         zlib1g-dev \
-        libpng-dev \ 
-        unzip
+        libpng-dev \
+        libgl1 \
+        libxi6
 
-# create directory for the app user
-RUN mkdir -p /home/app
-
-# Set up a working directory
-ENV APP_HOME=/home/app
-
-ADD https://github.com/wmo-raf/geomapviewer/archive/94c31b61291d5d05e2ff7e3940ad6cc39e530290.zip geomapviewer.zip
-RUN unzip geomapviewer.zip -d $APP_HOME && rm geomapviewer.zip
-RUN chmod +x $APP_HOME/geomapviewer-94c31b61291d5d05e2ff7e3940ad6cc39e530290
-
-RUN mv $APP_HOME/geomapviewer-94c31b61291d5d05e2ff7e3940ad6cc39e530290 $APP_HOME/geomapviewer
-
-WORKDIR $APP_HOME/geomapviewer
-# COPY package.json .
-# COPY $APP_HOME/geomapviewer/yarn.lock .
-
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
-
-# Install packages
-RUN yarn install
-
-# Stage 2: build
-FROM node:16.16.0-bullseye-slim AS builder
-RUN apt-get update && apt-get install -y libgl1 libxi6
-ENV APP_HOME=/home/app
-
-WORKDIR $APP_HOME/geomapviewer
-COPY --from=deps $APP_HOME/geomapviewer/node_modules ./node_modules
-COPY --from=deps $APP_HOME/geomapviewer .
-# COPY --from=deps public ./public
-# COPY $APP_HOME/geomapviewer/package.json $APP_HOME/geomapviewer/next.config.js $APP_HOME/geomapviewer/jsconfig.json ./
+WORKDIR /app
+# WORKDIR /app/geomapviewer-main
+# COPY . .
+ADD https://github.com/wmo-raf/geomapviewer/archive/refs/heads/main.tar.gz ./
+RUN tar -xzf ./main.tar.gz -C ./
+WORKDIR /app/geomapviewer-main
 
 # Env Variables that should be available at build time
 ARG ANALYTICS_PROPERTY_ID
@@ -49,28 +25,36 @@ ENV BITLY_TOKEN $BITLY_TOKEN
 ARG DEBUG
 ENV DEBUG $DEBUG
 
+ARG FEATURE_ENV
+ENV FEATURE_ENV $FEATURE_ENV
+
 ARG GOOGLE_CUSTOM_SEARCH_CX
 ENV GOOGLE_CUSTOM_SEARCH_CX $GOOGLE_CUSTOM_SEARCH_CX
 
 ARG GOOGLE_SEARCH_API_KEY
 ENV GOOGLE_SEARCH_API_KEY $GOOGLE_SEARCH_API_KEY
 
-ARG CMS_API
-ENV CMS_API $CMS_API
-
 ARG BASE_PATH
 ENV BASE_PATH $BASE_PATH
 
+ARG ASSET_PREFIX
+ENV ASSET_PREFIX $ASSET_PREFIX
+
+ARG CMS_API
+ENV CMS_API $CMS_API
+
+# Install packages
+RUN yarn install
+
+# Build
 RUN yarn build
 
-# Stage 3: run
+# Stage 2: run
 FROM node:16.16.0-bullseye-slim
-ENV APP_HOME=/home/app
+WORKDIR /app
+COPY --from=builder /app/geomapviewer-main/.next ./.next
+COPY --from=builder /app/geomapviewer-main/public ./public
+COPY --from=builder /app/geomapviewer-main/node_modules ./node_modules
+COPY --from=builder /app/geomapviewer-main/package.json ./
 
-WORKDIR $APP_HOME/geomapviewer
-
-COPY --from=builder $APP_HOME/geomapviewer/.next ./.next
-COPY --from=builder $APP_HOME/geomapviewer/public ./public
-COPY --from=builder $APP_HOME/geomapviewer/node_modules ./node_modules
-COPY --from=builder $APP_HOME/geomapviewer/package.json ./
 CMD ["yarn", "start"]

@@ -280,25 +280,11 @@ def make(args) -> None:
         run(args, split(
             f'docker-compose {docker_compose_args} up -d'))
         
-        # print(f"{YELLOW}=> [3/4] LOADING INITIAL WEATHER CONDITIONS DATA {RESET}")
-        # run(args, split(
-        #     f'docker-compose {docker_compose_args} run --rm cms_web python manage.py loaddata weather_conditions.json'))
-        
-        # print(f"{YELLOW}=> [4/5] LOADING INITIAL COUNTRIES DATA {RESET}")
-        # run(args, split(
-        #     f'docker-compose {docker_compose_args} run --rm cms_web python manage.py load_countries'))
-        
         print(f"{YELLOW}=> [4/4] COLLECTING STATIC FILES {RESET}")
         run(args, split(
-            f'docker-compose {docker_compose_args} run --rm cms_web python manage.py collectstatic --clear --no-input'))
+            f'docker-compose {docker_compose_args} exec cms_web python manage.py collectstatic --clear --no-input'))
         
         print(f"{GREEN}\u2713 OPERATION HAS BEEN COMPLETED {RESET}")
-
-    elif args.command == "forecast":
-        # docker_compose_args = setup_docker_args()
-
-        run(args, split(
-            f'docker-compose {DOCKER_COMPOSE_ARGS} run --rm cms_web python manage.py generate_forecast'))
     
     elif args.command == "createsuperuser":
         # docker_compose_args = setup_docker_args()
