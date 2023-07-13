@@ -3,7 +3,7 @@
 FROM ghcr.io/osgeo/gdal:ubuntu-small-3.7.0
 
 # install pip
-RUN apt-get update && apt-get -y install python3-pip --fix-missing imagemagick
+RUN apt-get update && apt-get -y install python3-pip --fix-missing imagemagick libmagic1
 
 # set python env
 ENV PYTHONDONTWRITEBYTECODE 1
